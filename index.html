@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>JSquared Systems Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231A1917'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' text-anchor='middle' fill='%23C9A84C'%3EJ2%3C/text%3E%3C/svg%3E">
+<style>
+/* Layout: a working order sheet. Categories run down the page as tick lists with
+   price leaders; the running order sits beside them (desktop) or docks to the
+   bottom with a pull-up sheet (phone). Palette and type follow jsq2.com. */
+:root {
+  --bg: #F8F7F3;
+  --paper: #FFFFFF;
+  --ink: #1A1917;
+  --muted: #74706A;
+  --line: #E4E1D9;
+  --gold: #C9A84C;
+  --gold-ink: #8C6D1F;
+  --gold-soft: #F4EDD9;
+  --on-gold: #1A1917;
+  --shadow: 0 1px 2px rgba(26,25,23,.05), 0 10px 30px rgba(26,25,23,.08);
+  --f-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-body: "DM Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --f-num: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131210; --paper: #1C1B18; --ink: #F1EEE6; --muted: #A39E94; --line: #2E2C27;
+    --gold: #D4B45C; --gold-ink: #E2C676; --gold-soft: #2C2614; --on-gold: #131210;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131210; --paper: #1C1B18; --ink: #F1EEE6; --muted: #A39E94; --line: #2E2C27;
+  --gold: #D4B45C; --gold-ink: #E2C676; --gold-soft: #2C2614; --on-gold: #131210;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
+button, input { font: inherit; color: inherit; }
+.wrap {
+  max-width: 1160px; margin: 0 auto;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+  padding-block: 26px 150px;
+}
+
+/* Header */
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-num); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.mark { width: 34px; height: 34px; border-radius: 9px; background: var(--ink); color: var(--gold); display: grid; place-items: center; font-family: var(--f-display); font-size: 19px; letter-spacing: 0; }
+h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(38px, 7.4vw, 66px); line-height: .98; letter-spacing: -.01em; margin: 18px 0 12px; text-wrap: balance; max-width: 15ch; }
+h1 em { color: var(--gold-ink); }
+.lede { color: var(--muted); max-width: 58ch; margin: 0; font-size: 16px; }
+.toprow { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-top: 18px; }
+.sample { font-size: 12.5px; font-weight: 600; color: var(--gold-ink); background: var(--gold-soft); border-radius: 999px; padding: 5px 12px; }
+.prepared { display: flex; align-items: center; gap: 8px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 4px 4px 4px 12px; min-width: 0; flex: 1 1 260px; max-width: 380px; }
+.prepared label { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.prepared input { border: 0; background: transparent; outline: none; min-width: 0; flex: 1; padding: 6px 4px; font-weight: 600; font-size: 16px; }
+.prepared:focus-within { border-color: var(--gold); }
+
+/* Category jump bar */
+.jump { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15; background: var(--bg); margin-top: 24px; padding-block: 10px; border-bottom: 1px solid var(--line); }
+.jump-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.jump-scroll::-webkit-scrollbar { display: none; }
+.jump a { flex: none; text-decoration: none; color: var(--ink); font-size: 13px; font-weight: 500; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { font-family: var(--f-num); font-weight: 500; font-size: 11.5px; color: var(--gold-ink); }
+.jump a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 32px; align-items: start; margin-top: 8px; }
+
+/* Menu */
+section.cat { padding-top: 26px; scroll-margin-top: 64px; }
+.cat-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 1.5px solid var(--ink); padding-bottom: 8px; }
+.cat-head h2 { font-family: var(--f-display); font-weight: 400; font-size: 28px; line-height: 1.1; margin: 0; }
+.cat-head p { margin: 0; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.cat-intro { color: var(--muted); font-size: 13.5px; margin: 8px 0 2px; max-width: 64ch; }
+.item {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 3px 14px; width: 100%; text-align: left;
+  padding: 15px 8px 15px 4px; background: none; border: 0; border-bottom: 1px dashed var(--line); cursor: pointer;
+  transition: background .15s;
+}
+.item:hover { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
+.item:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent); display: grid; place-items: center; margin-top: 2px; background: var(--paper); }
+.box svg { width: 13px; height: 13px; opacity: 0; }
+.row1 { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.nm { font-weight: 600; font-size: 16px; }
+.leader { flex: 1; min-width: 14px; border-bottom: 1.5px dotted color-mix(in srgb, var(--ink) 25%, transparent); transform: translateY(-4px); }
+.pr { font-family: var(--f-num); font-weight: 500; font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.desc { grid-column: 2; color: var(--muted); font-size: 14px; max-width: 64ch; }
+.facts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--muted); margin-top: 3px; font-family: var(--f-num); }
+.facts .why { font-family: var(--f-body); font-weight: 600; color: var(--gold-ink); }
+.facts .new { font-family: var(--f-body); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-ink); }
+.item.on .box { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.item.on .box svg { opacity: 1; }
+.item.auto .box { border-color: var(--gold); border-style: dashed; color: var(--gold-ink); }
+.item.auto .box svg { opacity: 1; }
+.item.on, .item.auto { background: color-mix(in srgb, var(--gold-soft) 55%, transparent); }
+
+/* Order */
+.order { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 74px); background: var(--paper); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 20px; display: grid; gap: 16px; max-height: calc(100vh - 96px); overflow-y: auto; }
+.order h2 { font-family: var(--f-display); font-weight: 400; font-size: 28px; line-height: 1; margin: 0; }
+.order .for { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.picked { display: grid; gap: 6px; font-size: 13.5px; max-height: 210px; overflow-y: auto; padding-right: 4px; }
+.picked .ln { display: flex; justify-content: space-between; gap: 10px; }
+.picked .ln span:first-child { min-width: 0; }
+.picked .ln.auto span:first-child::after { content: " (needed)"; color: var(--muted); }
+.v { font-family: var(--f-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.empty { color: var(--muted); font-size: 14px; margin: 0; }
+.totals { display: grid; gap: 8px; border-top: 1.5px solid var(--ink); padding-top: 12px; }
+.totals .ln { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.totals .big { font-size: 17px; font-weight: 700; }
+.totals .big .v { font-size: 20px; }
+.totals .small { font-size: 13px; color: var(--muted); }
+.golive { background: var(--ink); color: var(--bg); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.golive .k { font-family: var(--f-num); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+.golive .w { font-family: var(--f-display); font-size: 34px; line-height: 1.05; }
+.golive .d { font-size: 12.5px; opacity: .78; }
+.needs h3 { margin: 0 0 6px; font-family: var(--f-num); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.needs ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 13.5px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border-radius: 10px; padding: 10px 14px; border: 1.5px solid var(--line); background: var(--paper); cursor: pointer; font-weight: 600; }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.done { font-size: 12.5px; color: var(--gold-ink); font-weight: 600; }
+.fine { font-size: 12px; color: var(--muted); margin: 0; }
+
+.dock, .sheet-x { display: none; }
+.scrim[hidden] { display: none; }
+@media (max-width: 920px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .order {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40; border-radius: 20px 20px 0 0; max-height: 86vh; overflow-y: auto;
+    padding: 18px max(18px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+    transform: translateY(105%); transition: transform .25s ease; box-shadow: 0 -10px 40px rgba(0,0,0,.25);
+  }
+  .order.open { transform: none; }
+  .order .head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+  .sheet-x { display: inline-block; }
+  .picked { max-height: none; }
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 35; }
+  .dock {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; gap: 12px; align-items: center; justify-content: space-between;
+    background: var(--ink); color: var(--bg);
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  .dock .sum { display: grid; min-width: 0; line-height: 1.25; }
+  .dock .sum b { font-family: var(--f-num); font-weight: 500; font-size: 19px; }
+  .dock .sum span { font-size: 12.5px; opacity: .75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dock .btn { background: var(--gold); color: var(--on-gold); border-color: var(--gold); flex: none; }
+}
+@media (min-width: 921px) { .scrim { display: none; } }
+@media (max-width: 520px) {
+  .nm { font-size: 15.5px; }
+  .cat-head h2 { font-size: 25px; }
+  .cat-head p { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="mark">J2</span>JSquared · Systems menu</div>
+    <h1>Build the system your business <em>runs on.</em></h1>
+    <p class="lede">Tick what your business needs. Price and time to go live update as you go. Everything here is already running live for a coaching business today; we install it on your own accounts and check every number against your records before handover.</p>
+    <div class="toprow">
+      <span class="sample" role="note">Sample prices in AUD for discussion. Not a quote.</span>
+      <div class="prepared"><label for="client">Prepared for</label><input id="client" type="text" placeholder="Business name" autocomplete="organization" maxlength="60"></div>
+    </div>
+  </header>
+
+  <nav class="jump" aria-label="Menu sections"><div class="jump-scroll" id="jump"></div></nav>
+
+  <div class="layout">
+    <main id="menu"></main>
+    <div class="scrim" id="scrim" hidden></div>
+    <aside class="order" id="order" aria-label="Your build">
+      <div class="head">
+        <div><h2>Your build</h2><div class="for" id="forLine"></div></div>
+        <button class="btn sheet-x" id="closeSheet" type="button">Close</button>
+      </div>
+      <div class="picked" id="picked"></div>
+      <div class="totals" id="totals"></div>
+      <div class="golive">
+        <span class="k">Time to go live</span>
+        <span class="w" id="weeks">Tick an item</span>
+        <span class="d" id="days">Each item shows its build time.</span>
+      </div>
+      <div class="needs"><h3>What we need from you</h3><ul id="needs"><li>Tick an item to see this list.</li></ul></div>
+      <div class="actions">
+        <button class="btn primary" id="copy" type="button">Copy this build</button>
+        <button class="btn" id="clear" type="button">Clear all</button>
+        <span class="done" id="done" hidden>Copied</span>
+      </div>
+      <p class="fine">How time is worked out: the build days of everything ticked, plus 2 to 5 days for you to give us access, counted in 5-day working weeks and rounded to the nearest week. AI reviewers include a check-in with your sales lead so the scores match how they judge calls. AI usage is billed at cost with a monthly spending cap.</p>
+    </aside>
+  </div>
+</div>
+
+<div class="dock" id="dock">
+  <div class="sum"><b id="dockTotal">$0</b><span id="dockSub">Tick what you need</span></div>
+  <button class="btn" id="openSheet" type="button">Your build</button>
+</div>
+
+<script>
+/* Items ticked and locked on load. */
+const REQUIRED = [];
+
+const CATS = [
+  { id: "data", name: "Your data, in one place", short: "Data", intro: "One private database that every tool feeds into, so every number comes from the same place." },
+  { id: "reports", name: "Dashboards and reports", short: "Dashboards", intro: "What owners look at each day, built on that one source." },
+  { id: "ai", name: "AI reviewers", short: "AI reviewers", intro: "Every call or video scored against your own standards, checked against your sales manager's own marks before we switch it on." },
+  { id: "auto", name: "Automations", short: "Automations", intro: "The busywork your team does by hand today, done on time, with a person ticking anything that matters." },
+  { id: "hire", name: "Hiring and client success", short: "Hiring", intro: "For businesses that place reps or run a client community." },
+  { id: "funnel", name: "Funnel, booking and tracking", short: "Funnel", intro: "Fixes to the pages and calendars your leads go through." },
+];
+// lo/hi = working days to install; mo = monthly care (AUD, sample); ai = AI usage at cost per month [lo, hi]
+const ITEMS = [
+  { id: "W1", cat: "data", name: "Private business database", desc: "One secure database you own, with a read-only login for your team and a locked one for AI.", lo: .5, hi: .5, mo: 75, deps: [], need: "A Supabase account with a card on file" },
+  { id: "W2", cat: "data", name: "GoHighLevel connection", desc: "Every lead, booking, conversation and call lands within minutes, with duplicates merged into one person.", lo: 2, hi: 3, mo: 100, deps: ["W1"], need: "GHL admin access and an access key" },
+  { id: "W3", cat: "data", name: "Facebook ads connection", desc: "Spend, clicks and leads per ad back to day one, and the ad behind every sale.", lo: 1, hi: 1, mo: 50, deps: ["W1", "W2"], need: "Facebook Business Manager admin, business verification done" },
+  { id: "F4", cat: "data", name: "Sales ledger", desc: "Every sale with cash and contract value, by channel, setter and closer.", lo: 1, hi: 1, mo: 0, deps: ["W2"], need: "A sale form your closers fill in (we can build it)" },
+  { id: "R1", cat: "data", name: "Referral tracking", desc: "Who referred each lead, linked to that person's own record, and your referral rate by lead source.", lo: 1, hi: 2, mo: 25, deps: ["W2"], need: "A \"Referred by\" question on your forms (we add it)", isNew: true },
+  { id: "W4", cat: "data", name: "Call recording library", desc: "Every Fathom call lands minutes after it ends, matched to the lead and copied onto their GHL contact.", lo: 1, hi: 1, mo: 50, deps: ["W1", "W2"], need: "Fathom Team plan, reps recording every call" },
+  { id: "F3", cat: "data", name: "Payments feed", desc: "Every payment from Whop, Stripe or FanBasis in one cash ledger, instalments included.", lo: .5, hi: 1, mo: 25, deps: ["W1", "A2"], need: "Payments posted to Slack, or processor owner access" },
+  { id: "W5", cat: "data", name: "Community history", desc: "Every Discord message and voice-channel visit kept, so attendance questions take one search.", lo: .5, hi: .5, mo: 25, deps: ["W1", "A1"], need: "Discord server admin" },
+  { id: "W7", cat: "data", name: "Video stats and outage alert", desc: "Sales video and YouTube views per day, and an alert within 15 minutes if your video player stops.", lo: 1, hi: 1, mo: 50, deps: ["W1", "A2"], need: "Vidalytics key, a one-time YouTube login" },
+  { id: "W8", cat: "data", name: "Old CRM rescue", desc: "A full copy of an old GHL account before you delete it, merged without duplicates.", lo: 1, hi: 1, mo: 0, deps: ["W2"], need: "Access to the old GHL account" },
+
+  { id: "D1", cat: "reports", name: "Owner dashboard", desc: "One live page for money, sales, marketing and team. Switch between 7 days, all time or any fortnight.", lo: 2, hi: 3, mo: 150, deps: ["W1", "W2"], need: "One call to agree what each number means" },
+  { id: "D2", cat: "reports", name: "Daily ads report", desc: "Each morning, per ad: spend, leads, bookings, sales and a keep, watch or stop call.", lo: .5, hi: 1, mo: 75, deps: ["W3", "D1", "A2"], need: "Your marketer's cost targets" },
+  { id: "D3", cat: "reports", name: "Daily and weekly team posts", desc: "Yesterday's numbers in Slack every afternoon, and a Monday weekly with cost per sale.", lo: .5, hi: .5, mo: 25, deps: ["W2", "W3", "A2"], need: "A Slack channel for reports" },
+  { id: "S1", cat: "reports", name: "Missing sale alerts", desc: "Flags any deal marked won with no sale form, and any sale posted in Slack that never reached your numbers.", lo: .5, hi: .5, mo: 25, deps: ["W2", "A2"], need: "Your #sales Slack channel" },
+  { id: "D4", cat: "reports", name: "Google Sheet updater", desc: "Keeps your numbers sheet current twice a weekday, with a log of every change.", lo: .25, hi: .25, mo: 0, deps: ["W1"], need: "Access to the sheet" },
+  { id: "F1", cat: "reports", name: "Xero finance layer", desc: "Cash profit and loss by month, recurring versus one-off spend, and lines that look wrongly coded.", lo: 1, hi: 2, mo: 50, deps: ["W1"], need: "Xero admin approval, your chart of accounts" },
+  { id: "F2", cat: "reports", name: "Finance dashboard and budget", desc: "Revenue, costs and profit after tax against a budget you type into a sheet, plus a costs view of what drives your overheads.", lo: 1, hi: 2, mo: 50, deps: ["F1", "D1"], need: "Your budget lines and monthly targets" },
+
+  { id: "I1", cat: "ai", name: "Setter call reviewer", desc: "Scores every setter call against your script with exact quotes, shows how ready each lead was, and coaches each setter on what to fix first.", lo: 3, hi: 4, mo: 200, ai: [25, 30], deps: ["W2", "D1", "A1"], need: "Your setter script, GHL call recording switched on" },
+  { id: "I2", cat: "ai", name: "Sales call grader", desc: "Scores every sales call out of 100, based on what your won calls do that your lost calls don't.", lo: 3, hi: 3, mo: 200, ai: [15, 25], deps: ["W4", "D1"], need: "40 or more past recorded sales calls, your 5 best and 5 worst" },
+  { id: "I3", cat: "ai", name: "Video review assistant", desc: "Reviews student or applicant videos and drafts the reply for your reviewer to approve in one tap.", lo: 2, hi: 3, mo: 150, ai: [5, 8], deps: ["W5", "A2"], need: "Your review criteria, 50 or more past reviewed videos" },
+
+  { id: "A1", cat: "auto", name: "Always-on bot and alerts", desc: "Runs every data feed and report on time, and tells your team the moment one fails.", lo: .75, hi: .75, mo: 75, deps: ["W1"], need: "A Railway hosting account with a card on file" },
+  { id: "A2", cat: "auto", name: "Slack bot", desc: "Posts reports and alerts in Slack and reacts to tags and ticks as they happen.", lo: .25, hi: .25, mo: 0, deps: ["A1"], need: "Slack admin to install the app" },
+  { id: "A3", cat: "auto", name: "Meeting actions to ClickUp", desc: "Reads each leadership meeting, proposes the action items, and turns the ones you approve into ClickUp tasks.", lo: 1, hi: 2, mo: 100, ai: [8, 12], deps: ["W4", "A2"], need: "ClickUp workspace, leadership calls on Fathom" },
+  { id: "E1", cat: "auto", name: "Event registrations feed", desc: "Every event sign-up posted to Slack as it lands, with a live headcount and a check against your client list.", lo: .5, hi: 1, mo: 25, deps: ["W1", "A2"], need: "Access to your registration form (Typeform)", isNew: true },
+  { id: "A4", cat: "auto", name: "Ask AI about your business", desc: "Ask Claude questions in plain English and get answers from your live numbers. It can only read.", lo: .5, hi: .5, mo: 25, deps: ["W1"], need: "Claude Team seats for whoever asks" },
+
+  { id: "P3", cat: "hire", name: "Hiring company health check", desc: "A company hiring through you fills in one form. AI summarises its offer, scores 8 health areas, flags scam risk and opens a ClickUp card for your team to approve.", lo: .5, hi: 1, mo: 50, ai: [1, 5], deps: ["W1", "A1", "D1"], need: "Your intake questions", isNew: true },
+  { id: "P1", cat: "hire", name: "Rep application form", desc: "Each applicant becomes one ClickUp card with every answer; a second application updates the same card.", lo: .5, hi: .5, mo: 25, deps: ["W2", "A1"], need: "Your questions, a paid ClickUp plan" },
+  { id: "P2", cat: "hire", name: "Hiring requests list", desc: "Every business that asked you for reps, one row each, ready to follow up.", lo: .5, hi: .5, mo: 0, deps: ["W1"], need: "Where hiring requests arrive today" },
+  { id: "P4", cat: "hire", name: "Role-play test reminder", desc: "Every Wednesday, a personal reminder in each client's private Discord channel, sent in their success manager's name.", lo: 1, hi: 1, mo: 25, deps: ["W2", "W5", "A2"], need: "A private Discord channel per client" },
+  { id: "P5", cat: "hire", name: "Client list import to ClickUp", desc: "Every client and their payment plan loaded into ClickUp in one go.", lo: .5, hi: .5, mo: 0, deps: ["W2"], need: "Your client list and a ClickUp list" },
+
+  { id: "B1", cat: "funnel", name: "Application answers in the booking invite", desc: "Closers see each lead's application answers inside the calendar invite, before the call starts.", lo: .25, hi: .25, mo: 0, deps: [], need: "GHL admin", isNew: true },
+  { id: "L1", cat: "funnel", name: "Page speed audit and fixes", desc: "We find and fix what makes your sales page slow. Our last audit took a page from 61 MB to 14 MB.", lo: 1, hi: 1, mo: 0, deps: [], need: "GHL funnel editor access" },
+  { id: "L2", cat: "funnel", name: "Thank-you video tracking", desc: "Which booked leads played each thank-you video, and how far they watched.", lo: .5, hi: .5, mo: 0, deps: ["W7"], need: "Vidalytics on the thank-you page" },
+  { id: "L3", cat: "funnel", name: "Webinar ad tracking", desc: "Keeps the ad source on every webinar sign-up so you know which ads fill your webinars.", lo: .25, hi: .25, mo: 0, deps: ["W2"], need: "WebinarJam admin" },
+  { id: "L4", cat: "funnel", name: "Legal pages and auto-send agreement", desc: "Privacy and terms pages, and a client agreement that sends itself when the sale form is filled in.", lo: .5, hi: .5, mo: 0, deps: [], need: "Your own legal text" },
+];
+const BY = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+
+const PRICE = {"W1":700,"W2":3600,"W3":1450,"F4":1450,"R1":2150,"W4":1450,"F3":1100,"W5":700,"W7":1450,"W8":1450,"D1":3600,"D2":1100,"D3":700,"S1":700,"D4":350,"F1":2150,"F2":2150,"I1":5050,"I2":4300,"I3":3600,"A1":1100,"A2":350,"A3":2150,"E1":1100,"A4":700,"P3":1100,"P1":700,"P2":700,"P4":1450,"P5":700,"B1":350,"L1":1450,"L2":700,"L3":350,"L4":700};
+const price = it => PRICE[it.id];
+const money = n => "$" + Math.round(n).toLocaleString("en-AU");
+const num = d => (Number.isInteger(d) ? String(d) : d.toFixed(1).replace(/\.0$/, ""));
+const dayWord = d => d <= .25 ? "2 hours" : d < 1 ? "half a day" : num(d) + (d === 1 ? " day" : " days");
+const span = (lo, hi) => lo === hi ? dayWord(lo) : (lo < 1 ? dayWord(lo) : num(lo)) + " to " + dayWord(hi);
+
+let picks = new Set(REQUIRED);
+let client = "";
+try {
+  const s = JSON.parse(localStorage.getItem("j2-menu") || "null");
+  if (s) { picks = new Set([...(s.picks || []), ...REQUIRED].filter(id => BY[id])); client = s.client || ""; }
+} catch (e) {}
+const save = () => { try { localStorage.setItem("j2-menu", JSON.stringify({ picks: [...picks], client })); } catch (e) {} };
+const esc = s => s.replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+
+function compute() {
+  const why = new Map(); // id -> null for a pick, or the id that needs it
+  const visit = (id, by) => { if (why.has(id)) return; why.set(id, by); BY[id].deps.forEach(d => visit(d, id)); };
+  ITEMS.forEach(it => { if (picks.has(it.id)) visit(it.id, null); });
+  const chosen = ITEMS.filter(it => why.has(it.id));
+  const build = chosen.reduce((a, it) => a + price(it), 0);
+  const monthly = chosen.reduce((a, it) => a + it.mo, 0);
+  const ai = chosen.reduce((a, it) => it.ai ? [a[0] + it.ai[0], a[1] + it.ai[1]] : a, [0, 0]);
+  const lo = chosen.reduce((a, it) => a + it.lo, 0), hi = chosen.reduce((a, it) => a + it.hi, 0);
+  const wLo = Math.max(1, Math.round((lo + 2) / 5));
+  const wHi = Math.max(wLo + 1, Math.round((hi + 5) / 5));
+  return { why, chosen, build, monthly, ai, lo, hi, wLo, wHi, hasAI: chosen.some(it => it.cat === "ai"), needs: [...new Set(chosen.map(it => it.need))] };
+}
+
+const TICK = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function render() {
+  const c = compute();
+  document.getElementById("jump").innerHTML = CATS.map(cat => {
+    const n = ITEMS.filter(it => it.cat === cat.id && c.why.has(it.id)).length;
+    return `<a href="#${cat.id}">${cat.short}${n ? ` <b>${n}</b>` : ""}</a>`;
+  }).join("");
+  document.getElementById("menu").innerHTML = CATS.map(cat => {
+    const items = ITEMS.filter(it => it.cat === cat.id);
+    const n = items.filter(it => c.why.has(it.id)).length;
+    return `<section class="cat" id="${cat.id}">
+      <div class="cat-head"><h2>${cat.name}</h2><p>${n} of ${items.length} ticked</p></div>
+      <p class="cat-intro">${cat.intro}</p>
+      ${items.map(it => {
+        const picked = picks.has(it.id), auto = !picked && c.why.has(it.id);
+        const locked = REQUIRED.includes(it.id);
+        const state = picked ? "on" : auto ? "auto" : "";
+        const why = locked ? "Required for us to deliver results" : auto ? `Included: ${BY[c.why.get(it.id)].name} needs it` : "";
+        return `<button class="item ${state}" type="button" role="checkbox" aria-checked="${picked ? "true" : auto ? "mixed" : "false"}" data-id="${it.id}" id="item-${it.id}"${locked ? ' aria-disabled="true"' : ""}>
+          <span class="box">${TICK}</span>
+          <span class="row1"><span class="nm">${it.name}</span><span class="leader"></span><span class="pr">${money(price(it))}</span></span>
+          <span class="desc">${it.desc}</span>
+          <span class="facts">${why ? `<span class="why">${why}</span>` : ""}${it.isNew ? '<span class="new">New</span>' : ""}<span>${span(it.lo, it.hi)}</span>${it.mo ? `<span>${money(it.mo)}/mo care</span>` : ""}${it.ai ? `<span>AI ~${money(it.ai[0])} to ${money(it.ai[1])}/mo</span>` : ""}</span>
+        </button>`;
+      }).join("")}
+    </section>`;
+  }).join("");
+  document.getElementById("forLine").textContent = client ? `Prepared for ${client}` : `${c.chosen.length} item${c.chosen.length === 1 ? "" : "s"}`;
+  document.getElementById("picked").innerHTML = c.chosen.length
+    ? c.chosen.map(it => `<div class="ln ${picks.has(it.id) ? "" : "auto"}"><span>${it.name}</span><span class="v">${money(price(it))}</span></div>`).join("")
+    : '<p class="empty">Nothing ticked yet. Tap anything on the menu to add it; anything it needs comes with it.</p>';
+  const T = [`<div class="ln big"><span>Build fee, one-off</span><span class="v">${money(c.build)}</span></div>`,
+             `<div class="ln"><span>Monthly care</span><span class="v">${money(c.monthly)}/mo</span></div>`];
+  if (c.ai[1]) T.push(`<div class="ln small"><span>AI usage, at cost</span><span class="v">~${money(c.ai[0])} to ${money(c.ai[1])}/mo</span></div>`);
+  document.getElementById("totals").innerHTML = T.join("");
+  const none = !c.chosen.length;
+  document.getElementById("weeks").textContent = none ? "Tick an item" : `${c.wLo} to ${c.wHi} weeks`;
+  document.getElementById("days").textContent = none ? "Each item shows its build time." : `${span(Math.round(c.lo * 2) / 2, Math.round(c.hi * 2) / 2)} of build work from the day you say go${c.hasAI ? ", including a check-in with your sales lead" : ""}.`;
+  document.getElementById("needs").innerHTML = none ? "<li>Tick an item to see this list.</li>" : c.needs.map(n => `<li>${esc(n)}</li>`).join("");
+  document.getElementById("dockTotal").textContent = money(c.build);
+  document.getElementById("dockSub").textContent = none ? "Tick what you need" : `${c.chosen.length} items · + ${money(c.monthly)}/mo · ${c.wLo} to ${c.wHi} weeks`;
+  window.__text = () => [
+    `JSquared systems build${client ? " for " + client : ""}`,
+    ...c.chosen.map(it => `- ${it.name}: ${money(price(it))}${picks.has(it.id) ? "" : " (needed by another item)"}`),
+    `Build fee, one-off: ${money(c.build)}`,
+    `Monthly care: ${money(c.monthly)}${c.ai[1] ? `, plus AI usage at cost (about ${money(c.ai[0])} to ${money(c.ai[1])} a month)` : ""}`,
+    `Time to go live: ${c.wLo} to ${c.wHi} weeks`,
+    "Sample prices for discussion, not a quote.",
+  ].join("\n");
+  save();
+}
+
+document.getElementById("menu").addEventListener("click", e => {
+  const b = e.target.closest(".item"); if (!b) return;
+  const id = b.dataset.id;
+  if (REQUIRED.includes(id)) return;
+  picks.has(id) ? picks.delete(id) : picks.add(id);
+  const y = b.getBoundingClientRect().top;
+  render();
+  const nb = document.getElementById("item-" + id);
+  if (nb) { window.scrollBy(0, nb.getBoundingClientRect().top - y); nb.focus({ preventScroll: true }); }
+});
+const clientInput = document.getElementById("client");
+clientInput.value = client;
+clientInput.addEventListener("input", () => { client = clientInput.value.trim(); render(); });
+document.getElementById("clear").addEventListener("click", () => { picks = new Set(REQUIRED); render(); });
+const order = document.getElementById("order"), scrim = document.getElementById("scrim");
+const openSheet = () => { order.classList.add("open"); scrim.hidden = false; };
+const closeSheet = () => { order.classList.remove("open"); scrim.hidden = true; };
+document.getElementById("openSheet").addEventListener("click", openSheet);
+document.getElementById("closeSheet").addEventListener("click", closeSheet);
+scrim.addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+document.getElementById("copy").addEventListener("click", () => {
+  const text = window.__text ? window.__text() : "";
+  const ok = () => { const d = document.getElementById("done"); d.hidden = false; setTimeout(() => { d.hidden = true; }, 1800); };
+  const fallback = () => {
+    const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); ok(); } catch (e) {} ta.remove();
+  };
+  try { navigator.clipboard.writeText(text).then(ok, fallback); } catch (e) { fallback(); }
+});
+render();
+</script>
+</body>
+</html>
