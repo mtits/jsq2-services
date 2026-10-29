@@ -133,6 +133,16 @@ section.cat { padding-top: 26px; scroll-margin-top: 64px; }
 .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .done { font-size: 12.5px; color: var(--gold-ink); font-weight: 600; }
 .fine { font-size: 12px; color: var(--muted); margin: 0; }
+.backfill { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 0 8px 4px 42px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: 13.5px; }
+.backfill .t { grid-column: 1 / -1; font-weight: 600; }
+.backfill label { display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); min-width: 0; }
+.backfill select, .backfill input { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--bg); font-size: 16px; color: var(--ink); }
+.backfill select:focus-visible, .backfill input:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.backfill .out { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12.5px; }
+.backfill .out b { color: var(--ink); font-family: var(--f-num); font-weight: 500; }
+.quote { display: none; }
+.quote.on { display: block; margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--gold); background: var(--gold-soft); border-radius: 0 10px 10px 0; font-size: 14px; max-width: 70ch; }
+.prepared input[readonly] { color: var(--ink); }
 
 .dock, .sheet-x { display: none; }
 .scrim[hidden] { display: none; }
@@ -160,6 +170,7 @@ section.cat { padding-top: 26px; scroll-margin-top: 64px; }
 }
 @media (min-width: 921px) { .scrim { display: none; } }
 @media (max-width: 520px) {
+  .backfill { margin-left: 0; grid-template-columns: 1fr; }
   .nm { font-size: 15.5px; }
   .cat-head h2 { font-size: 25px; }
   .cat-head p { display: none; }
@@ -174,9 +185,10 @@ section.cat { padding-top: 26px; scroll-margin-top: 64px; }
     <h1>Build the system your business <em>runs on.</em></h1>
     <p class="lede">Tick what your business needs. Price and time to go live update as you go. Everything here is already running live for a coaching business today; we install it on your own accounts and check every number against your records before handover.</p>
     <div class="toprow">
-      <span class="sample" role="note">Sample prices in AUD for discussion. Not a quote.</span>
+      <span class="sample" role="note" id="priceNote">Sample prices in AUD for discussion. Not a quote.</span>
       <div class="prepared"><label for="client">Prepared for</label><input id="client" type="text" placeholder="Business name" autocomplete="organization" maxlength="60"></div>
     </div>
+    <p class="quote" id="quoteNote"></p>
   </header>
 
   <nav class="jump" aria-label="Menu sections"><div class="jump-scroll" id="jump"></div></nav>
@@ -202,7 +214,7 @@ section.cat { padding-top: 26px; scroll-margin-top: 64px; }
         <button class="btn" id="clear" type="button">Clear all</button>
         <span class="done" id="done" hidden>Copied</span>
       </div>
-      <p class="fine">How time is worked out: the build days of everything ticked, plus 2 to 5 days for you to give us access, counted in 5-day working weeks and rounded to the nearest week. AI reviewers include a check-in with your sales lead so the scores match how they judge calls. AI usage is billed at cost with a monthly spending cap.</p>
+      <p class="fine">How time is worked out: the build days of everything ticked, plus 2 to 5 days for you to give us access, counted in 5-day working weeks and rounded to the nearest week. AI reviewers include a check-in with your sales lead so the scores match how they judge calls. AI usage is billed at cost with a monthly spending cap. Scoring past calls is a one-off: the low end is one clean pass, the high end is what it really cost per call at our current client once the scorecard had been tuned and re-run with their sales lead.</p>
     </aside>
   </div>
 </div>
@@ -215,6 +227,17 @@ section.cat { padding-top: 26px; scroll-margin-top: 64px; }
 <script>
 /* Items ticked and locked on load. */
 const REQUIRED = [];
+/* A client's own quote page sets this (scripts/build_jsq2_menu.py, clients/*.json). */
+const CLIENT = null;
+/* Scoring past calls or videos when a reviewer is switched on. AI cost per item,
+   measured at our current client (Oct 2026): low = one clean pass, high = their real
+   all-in cost per item after the scorecard was tuned and re-run. */
+const BACKFILL = {
+  I1: { noun: "setter calls", one: "setter call", lo: 0.06, hi: 0.15, perMonth: 300 },
+  I2: { noun: "sales calls", one: "sales call", lo: 0.30, hi: 0.60, perMonth: 40 },
+  I3: { noun: "videos", one: "video", lo: 0.06, hi: 0.16, perMonth: 30 },
+};
+const MONTHS = [[0, "Not needed"], [1, "Last month"], [3, "Last 3 months"], [6, "Last 6 months"], [12, "Last 12 months"]];
 
 const CATS = [
   { id: "data", name: "Your data, in one place", short: "Data", intro: "One private database that every tool feeds into, so every number comes from the same place." },
@@ -268,21 +291,35 @@ const ITEMS = [
   { id: "L4", cat: "funnel", name: "Legal pages and auto-send agreement", desc: "Privacy and terms pages, and a client agreement that sends itself when the sale form is filled in.", lo: .5, hi: .5, mo: 0, deps: [], need: "Your own legal text" },
 ];
 const BY = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+if (CLIENT) {
+  (CLIENT.hide || []).forEach(id => { const i = ITEMS.findIndex(x => x.id === id); if (i >= 0) ITEMS.splice(i, 1); });
+  Object.entries(CLIENT.monthly || {}).forEach(([id, v]) => { if (BY[id]) BY[id].mo = v; });
+  (CLIENT.required || []).forEach(id => { if (BY[id] && !REQUIRED.includes(id)) REQUIRED.push(id); });
+}
 
 const PRICE = {"W1":700,"W2":3600,"W3":1450,"F4":1450,"R1":2150,"W4":1450,"F3":1100,"W5":700,"W7":1450,"W8":1450,"D1":3600,"D2":1100,"D3":700,"S1":700,"D4":350,"F1":2150,"F2":2150,"I1":5050,"I2":4300,"I3":3600,"A1":1100,"A2":350,"A3":2150,"E1":1100,"A4":700,"P3":1100,"P1":700,"P2":700,"P4":1450,"P5":700,"B1":350,"L1":1450,"L2":700,"L3":350,"L4":700};
 const price = it => PRICE[it.id];
+const SELL_PER_HOUR = 180;
+const labour = h => Math.max(150, Math.round(h * SELL_PER_HOUR / 50) * 50);
 const money = n => "$" + Math.round(n).toLocaleString("en-AU");
 const num = d => (Number.isInteger(d) ? String(d) : d.toFixed(1).replace(/\.0$/, ""));
 const dayWord = d => d <= .25 ? "2 hours" : d < 1 ? "half a day" : num(d) + (d === 1 ? " day" : " days");
 const span = (lo, hi) => lo === hi ? dayWord(lo) : (lo < 1 ? dayWord(lo) : num(lo)) + " to " + dayWord(hi);
 
-let picks = new Set(REQUIRED);
-let client = "";
+const KEY = "j2-menu" + (CLIENT ? "-" + CLIENT.token : "");
+const fresh = () => ({ picks: new Set([...((CLIENT && CLIENT.picks) || []), ...REQUIRED]), bf: Object.fromEntries(Object.entries((CLIENT && CLIENT.backfill) || {}).map(([k, v]) => [k, { ...v }])) });
+let { picks, bf } = fresh();
+let client = CLIENT ? CLIENT.name : "";
 try {
-  const s = JSON.parse(localStorage.getItem("j2-menu") || "null");
-  if (s) { picks = new Set([...(s.picks || []), ...REQUIRED].filter(id => BY[id])); client = s.client || ""; }
+  const s = JSON.parse(localStorage.getItem(KEY) || "null");
+  if (s) {
+    picks = new Set([...(s.picks || []), ...REQUIRED].filter(id => BY[id] && ITEMS.includes(BY[id])));
+    bf = s.bf || {};
+    if (!CLIENT) client = s.client || "";
+  }
 } catch (e) {}
-const save = () => { try { localStorage.setItem("j2-menu", JSON.stringify({ picks: [...picks], client })); } catch (e) {} };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ picks: [...picks], client, bf })); } catch (e) {} };
+const bfOf = id => ({ months: 0, perMonth: BACKFILL[id].perMonth, ...(bf[id] || {}) });
 const esc = s => s.replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 
 function compute() {
@@ -293,10 +330,33 @@ function compute() {
   const build = chosen.reduce((a, it) => a + price(it), 0);
   const monthly = chosen.reduce((a, it) => a + it.mo, 0);
   const ai = chosen.reduce((a, it) => it.ai ? [a[0] + it.ai[0], a[1] + it.ai[1]] : a, [0, 0]);
-  const lo = chosen.reduce((a, it) => a + it.lo, 0), hi = chosen.reduce((a, it) => a + it.hi, 0);
+  const past = chosen.filter(it => BACKFILL[it.id] && bfOf(it.id).months > 0).map(it => {
+    const s = bfOf(it.id), cfg = BACKFILL[it.id], n = Math.round(s.months * Math.max(0, s.perMonth || 0));
+    const hours = Math.max(2, Math.ceil(n / 250));
+    return { id: it.id, cfg, n, months: s.months, hours, fee: labour(hours), ai: [n * cfg.lo, n * cfg.hi] };
+  }).filter(b => b.n > 0);
+  const pastFee = past.reduce((a, b) => a + b.fee, 0);
+  const aiOnce = past.reduce((a, b) => [a[0] + b.ai[0], a[1] + b.ai[1]], [0, 0]);
+  const pastDays = past.reduce((a, b) => a + b.hours / 8, 0);
+  const lo = chosen.reduce((a, it) => a + it.lo, 0) + pastDays, hi = chosen.reduce((a, it) => a + it.hi, 0) + pastDays;
   const wLo = Math.max(1, Math.round((lo + 2) / 5));
   const wHi = Math.max(wLo + 1, Math.round((hi + 5) / 5));
-  return { why, chosen, build, monthly, ai, lo, hi, wLo, wHi, hasAI: chosen.some(it => it.cat === "ai"), needs: [...new Set(chosen.map(it => it.need))] };
+  return { why, chosen, build: build + pastFee, monthly, ai, past, aiOnce, lo, hi, wLo, wHi, hasAI: chosen.some(it => it.cat === "ai"), needs: [...new Set(chosen.map(it => it.need))] };
+}
+
+const roundCash = n => n < 10 ? Math.max(1, Math.round(n)) : Math.round(n / 5) * 5;
+function bfBlock(id, c) {
+  const s = bfOf(id), cfg = BACKFILL[id], b = c.past.find(x => x.id === id);
+  const opts = MONTHS.map(([m, label]) => `<option value="${m}"${m === s.months ? " selected" : ""}>${label}</option>`).join("");
+  const out = b
+    ? `About <b>${b.n.toLocaleString("en-AU")}</b> ${cfg.noun}. Our time <b>${money(b.fee)}</b>. AI, one-off at cost: <b>${money(roundCash(b.ai[0]))} to ${money(roundCash(b.ai[1]))}</b>.`
+    : `Score the ${cfg.noun} you already have, so the reviewer starts with a full history instead of an empty page.`;
+  return `<div class="backfill" data-bf="${id}">
+    <span class="t">Score past ${cfg.noun}?</span>
+    <label for="bf-m-${id}">How far back<select id="bf-m-${id}" data-k="months">${opts}</select></label>
+    <label for="bf-n-${id}">${cfg.noun[0].toUpperCase() + cfg.noun.slice(1)} a month<input id="bf-n-${id}" data-k="perMonth" type="number" inputmode="numeric" min="0" max="20000" step="10" value="${s.perMonth}"></label>
+    <p class="out">${out}</p>
+  </div>`;
 }
 
 const TICK = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -323,17 +383,19 @@ function render() {
           <span class="row1"><span class="nm">${it.name}</span><span class="leader"></span><span class="pr">${money(price(it))}</span></span>
           <span class="desc">${it.desc}</span>
           <span class="facts">${why ? `<span class="why">${why}</span>` : ""}${it.isNew ? '<span class="new">New</span>' : ""}<span>${span(it.lo, it.hi)}</span>${it.mo ? `<span>${money(it.mo)}/mo care</span>` : ""}${it.ai ? `<span>AI ~${money(it.ai[0])} to ${money(it.ai[1])}/mo</span>` : ""}</span>
-        </button>`;
+        </button>${BACKFILL[it.id] && (picked || auto) ? bfBlock(it.id, c) : ""}`;
       }).join("")}
     </section>`;
   }).join("");
   document.getElementById("forLine").textContent = client ? `Prepared for ${client}` : `${c.chosen.length} item${c.chosen.length === 1 ? "" : "s"}`;
   document.getElementById("picked").innerHTML = c.chosen.length
     ? c.chosen.map(it => `<div class="ln ${picks.has(it.id) ? "" : "auto"}"><span>${it.name}</span><span class="v">${money(price(it))}</span></div>`).join("")
+      + c.past.map(b => `<div class="ln"><span>Score ~${b.n.toLocaleString("en-AU")} past ${b.cfg.noun}</span><span class="v">${money(b.fee)}</span></div>`).join("")
     : '<p class="empty">Nothing ticked yet. Tap anything on the menu to add it; anything it needs comes with it.</p>';
   const T = [`<div class="ln big"><span>Build fee, one-off</span><span class="v">${money(c.build)}</span></div>`,
              `<div class="ln"><span>Monthly care</span><span class="v">${money(c.monthly)}/mo</span></div>`];
   if (c.ai[1]) T.push(`<div class="ln small"><span>AI usage, at cost</span><span class="v">~${money(c.ai[0])} to ${money(c.ai[1])}/mo</span></div>`);
+  if (c.aiOnce[1]) T.push(`<div class="ln small"><span>AI for past calls, one-off at cost</span><span class="v">~${money(roundCash(c.aiOnce[0]))} to ${money(roundCash(c.aiOnce[1]))}</span></div>`);
   document.getElementById("totals").innerHTML = T.join("");
   const none = !c.chosen.length;
   document.getElementById("weeks").textContent = none ? "Tick an item" : `${c.wLo} to ${c.wHi} weeks`;
@@ -344,10 +406,11 @@ function render() {
   window.__text = () => [
     `JSquared systems build${client ? " for " + client : ""}`,
     ...c.chosen.map(it => `- ${it.name}: ${money(price(it))}${picks.has(it.id) ? "" : " (needed by another item)"}`),
+    ...c.past.map(b => `- Score ~${b.n.toLocaleString("en-AU")} past ${b.cfg.noun}: ${money(b.fee)} (AI one-off at cost ${money(roundCash(b.ai[0]))} to ${money(roundCash(b.ai[1]))})`),
     `Build fee, one-off: ${money(c.build)}`,
     `Monthly care: ${money(c.monthly)}${c.ai[1] ? `, plus AI usage at cost (about ${money(c.ai[0])} to ${money(c.ai[1])} a month)` : ""}`,
     `Time to go live: ${c.wLo} to ${c.wHi} weeks`,
-    "Sample prices for discussion, not a quote.",
+    CLIENT ? `Prices for ${CLIENT.name}${CLIENT.valid_until ? ", valid until " + CLIENT.valid_until : ""}.` : "Sample prices for discussion, not a quote.",
   ].join("\n");
   save();
 }
@@ -364,8 +427,22 @@ document.getElementById("menu").addEventListener("click", e => {
 });
 const clientInput = document.getElementById("client");
 clientInput.value = client;
-clientInput.addEventListener("input", () => { client = clientInput.value.trim(); render(); });
-document.getElementById("clear").addEventListener("click", () => { picks = new Set(REQUIRED); render(); });
+clientInput.addEventListener("input", () => { if (!CLIENT) { client = clientInput.value.trim(); render(); } });
+document.getElementById("clear").addEventListener("click", () => { ({ picks, bf } = fresh()); render(); });
+document.getElementById("menu").addEventListener("change", e => {
+  const el = e.target.closest("[data-k]"), box = e.target.closest("[data-bf]"); if (!el || !box) return;
+  const id = box.dataset.bf, s = bfOf(id);
+  s[el.dataset.k] = Math.max(0, Math.min(20000, Number(el.value) || 0));
+  bf[id] = s;
+  const y = box.getBoundingClientRect().top; render();
+  const nb = document.querySelector(`[data-bf="${id}"]`); if (nb) window.scrollBy(0, nb.getBoundingClientRect().top - y);
+});
+if (CLIENT) {
+  clientInput.readOnly = true;
+  document.getElementById("priceNote").textContent = `Prices for ${CLIENT.name}${CLIENT.valid_until ? ", valid until " + CLIENT.valid_until : ""}`;
+  if (CLIENT.note) { const q = document.getElementById("quoteNote"); q.textContent = CLIENT.note; q.classList.add("on"); }
+  document.title = `JSquared Systems Menu for ${CLIENT.name}`;
+}
 const order = document.getElementById("order"), scrim = document.getElementById("scrim");
 const openSheet = () => { order.classList.add("open"); scrim.hidden = false; };
 const closeSheet = () => { order.classList.remove("open"); scrim.hidden = true; };
